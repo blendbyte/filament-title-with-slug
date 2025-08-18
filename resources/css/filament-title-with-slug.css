@@ -1,1 +1,4 @@
-@tailwind utilities;
+@import 'tailwindcss/utilities' layer(utilities);
+@source "../views/**/*.blade.php";
+
+@custom-variant dark (&:is(.dark *));
