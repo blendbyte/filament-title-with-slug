@@ -179,7 +179,7 @@ class SlugInput extends TextInput
 
     public function getBaseUrl(): string
     {
-        return Str::of($this->evaluate($this->baseUrl))->rtrim('/');
+        return Str::rtrim($this->evaluate($this->baseUrl), '/');
     }
 
     public function slugInputShowUrl(bool $showUrl): static
