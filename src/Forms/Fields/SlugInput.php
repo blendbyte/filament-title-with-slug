@@ -16,6 +16,8 @@ class SlugInput extends TextInput
 
     protected string|Closure|null $baseUrl = null;
 
+    protected string|null $helperText = null;
+
     protected bool $showUrl = true;
 
     protected bool $cancelled = false;
@@ -187,6 +189,11 @@ class SlugInput extends TextInput
         $this->showUrl = $showUrl;
 
         return $this;
+    }
+
+    public function getHelperText(): ?string
+    {
+        return $this->helperText;
     }
 
     public function getShowUrl(): ?bool
