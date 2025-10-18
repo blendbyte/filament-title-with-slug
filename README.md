@@ -80,6 +80,20 @@ If needed, you can publish the config file with:
 php artisan vendor:publish --tag="filament-title-with-slug-config"
 ```
 
+You will need to set up a Filament [custom theme](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme)
+
+If you don't yet have a custom theme, run the following command:
+
+```bash
+php artisan make:filament-theme
+```
+
+Next, open up the theme.css file for the custom theme and add the following line:
+
+```css
+@import "../../../../vendor/blendbyte/filament-title-with-slug/resources/css/filament-title-with-slug.css";
+```
+
 ## Translation
 
 If needed, you can publish the translation files with:
