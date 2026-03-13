@@ -14,6 +14,13 @@ use Illuminate\Support\Str;
 
 class TitleWithSlugInput
 {
+    /**
+     * @param  array<int|string, mixed>|Closure|null  $titleExtraInputAttributes
+     * @param  array<int|string, mixed>  $titleRules
+     * @param  array<int, mixed>  $titleRuleUniqueParameters
+     * @param  array<int|string, mixed>  $slugRules
+     * @param  array<int, mixed>  $slugRuleUniqueParameters
+     */
     public static function make(
         // Model fields
         string $fieldTitle = null,
@@ -70,7 +77,7 @@ class TitleWithSlugInput
                     $state,
                     Set $set,
                     Get $get,
-                    string $context,
+                    string $operation,
                     ?Model $record,
                     TextInput $component
                 ) use (
@@ -80,7 +87,7 @@ class TitleWithSlugInput
                 ) {
                     $slugAutoUpdateDisabled = $get('slug_auto_update_disabled');
 
-                    if ($context === 'edit' && filled($record)) {
+                    if ($operation === 'edit' && filled($record)) {
                         $slugAutoUpdateDisabled = true;
                     }
 
@@ -121,7 +128,7 @@ class TitleWithSlugInput
             ->slugInputVisitLinkRoute($urlVisitLinkRoute)
             ->slugInputVisitLinkLabel($urlVisitLinkLabel)
             ->slugInputUrlVisitLinkVisible($urlVisitLinkVisible)
-            ->slugInputContext(fn ($context) => $context === 'create' ? 'create' : 'edit')
+            ->slugInputContext(fn (string $operation) => $operation === 'create' ? 'create' : 'edit')
             ->slugInputRecordSlug(fn (?Model $record) => data_get($record?->attributesToArray(), $fieldSlug))
             ->slugInputModelName(
                 fn (?Model $record) => $record
@@ -138,7 +145,7 @@ class TitleWithSlugInput
             ->readOnly($slugIsReadonly)
             ->live(true)
             ->autocomplete(false)
-            ->disableLabel()
+            ->hiddenLabel()
             ->regex($slugRuleRegex)
             ->rules($slugRules)
             ->afterStateUpdated(

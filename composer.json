@@ -22,22 +22,23 @@
         }
     ],
     "require": {
-        "php": "^8.1",
-        "filament/filament": "^4.0",
+        "php": "^8.2",
+        "filament/filament": "^5.0",
         "illuminate/contracts": "^10.0|^11.0|^12.0",
         "spatie/laravel-package-tools": "^1.13.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "nunomaduro/collision": "^7.8|^8.1",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "pestphp/pest": "^2.13",
-        "pestphp/pest-plugin-laravel": "^2.2",
+        "nunomaduro/collision": "^8.1|^8.6",
+        "larastan/larastan": "^3.4",
+        "orchestra/testbench": "^10.0",
+        "pestphp/pest": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0",
         "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^10.3|^11.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-deprecation-rules": "^2.0",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^12.5",
         "spatie/laravel-ray": "^1.31"
     },
     "autoload": {
@@ -57,7 +58,7 @@
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
-        "preflight": "vendor/bin/pint; npm run build; vendor/bin/phpstan analyse; vendor/bin/x-ray . --ignore './build'; vendor/bin/pest",
+        "preflight": "vendor/bin/pint; npm run build; vendor/bin/phpstan analyse; vendor/bin/pest",
         "format": "vendor/bin/pint"
     },
     "config": {

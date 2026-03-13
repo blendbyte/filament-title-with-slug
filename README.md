@@ -80,7 +80,7 @@ If needed, you can publish the config file with:
 php artisan vendor:publish --tag="filament-title-with-slug-config"
 ```
 
-You will need to set up a Filament [custom theme](https://filamentphp.com/docs/4.x/styling/overview#creating-a-custom-theme)
+You will need to set up a Filament [custom theme](https://filamentphp.com/docs/5.x/styling/overview#creating-a-custom-theme)
 
 If you don't yet have a custom theme, run the following command:
 
@@ -93,6 +93,17 @@ Next, open up the theme.css file for the custom theme and add the following line
 ```css
 @import "../../../../vendor/blendbyte/filament-title-with-slug/resources/css/filament-title-with-slug.css";
 ```
+
+## Local workbench
+
+For quick browser testing while developing the package, a Testbench workbench is included.
+The workbench uses its own Filament panel theme and includes the package stylesheet automatically during `composer serve`.
+
+```bash
+composer serve
+```
+
+Open `http://127.0.0.1:8000/admin/title-with-slug-playground`.
 
 ## Translation
 
@@ -124,7 +135,7 @@ our [GitHub discussions](https://github.com/blendbyte/filament-title-with-slug/d
 
 This package provides the custom InputField `TitleWithSlugInput` for the **Filament Form Builder**.
 
-Read the [installation details for Filament](https://filamentphp.com/docs/3.x/admin/installation) here.
+Read the [installation details for Filament](https://filamentphp.com/docs/5.x/introduction/installation) here.
 
 Below an example, where to put the new field inside your Filament Resource.
 
@@ -134,24 +145,23 @@ Below an example, where to put the new field inside your Filament Resource.
 ```php
 
 use Camya\Filament\Forms\Components\TitleWithSlugInput;
+use Filament\Schemas\Schema;
 
 class PostResource extends Resource
 {
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form->schema([
-        
+        return $schema->components([
             TitleWithSlugInput::make(
                 fieldTitle: 'title',
                 fieldSlug: 'slug',
             )
-            
         ]);
     }
 }
 ```
 
-> **Tip:** To occupy the full width, use `TitleWithSlugInput::make()->columnSpan('full')`.
+> **Tip:** To occupy the full width, use `TitleWithSlugInput::make()->columnSpanFull()`.
 
 The output looks like this:
 
@@ -240,7 +250,7 @@ You can use a named route, e.g. `route('product.show', ['slug' => $record->slug]
 ```
 
 Laravel documentation: 
-[Generating URLs To Named Routes](https://laravel.com/docs/9.x/routing#generating-urls-to-named-routes)
+[Generating URLs To Named Routes](https://laravel.com/docs/12.x/routing#generating-urls-to-named-routes)
 
 By default, the package concatenates the strings `host + path + slug` to generate the "Visit" link.
 
@@ -325,7 +335,7 @@ This is needed in order to set Filament's "ignorable" parameter correctly.
 
 This array is inserted into the input field's `->unique(...[$slugRuleUniqueParameters])` method.
 
-Read Filament's documentation for the [Unique](https://filamentphp.com/docs/2.x/forms/validation#unique) method.
+Read Filament's documentation for the [Unique](https://filamentphp.com/docs/5.x/forms/validation#unique) method.
 
 Available array keys:
 
@@ -354,7 +364,7 @@ Note: You can customize the validation error, see [Custom error messages](#custo
 
 ### Dark Mode
 
-The package supports [Filaments dark mode](https://filamentphp.com/docs/2.x/admin/appearance#dark-mode). Dark mode
+The package supports [Filament's dark mode](https://filamentphp.com/docs/5.x/styling/overview). Dark mode
 output looks like this:
 
 <img src="docs/examples/camya-filament-title-with-slug_example_dark-mode_01.jpg" width="600" />
@@ -385,8 +395,8 @@ You can use the TitleWithSlugInput inside a repeater with a database relation.
 
 This example uses the Eloquent relationship `"Post hasMany FAQEntries"`.
 
-Read the [Laravel Eloquent Relationship](https://laravel.com/docs/9.x/eloquent-relationships#one-to-many)
-and the [Filament Repeater](https://filamentphp.com/docs/2.x/forms/fields#repeater) docs for details.
+Read the [Laravel Eloquent Relationship](https://laravel.com/docs/12.x/eloquent-relationships#one-to-many)
+and the [Filament Repeater](https://filamentphp.com/docs/5.x/forms/repeater) docs for details.
 
 ```php
 \Filament\Forms\Components\Repeater::make('FAQEntries')
@@ -471,14 +481,14 @@ If you have other defaults, you can publish the configuration file and change th
 php artisan vendor:publish --tag="filament-title-with-slug-config"
 ```
 
-You'll find the published config here: `config/filament-title-with-slug-config.php`
+You'll find the published config here: `config/filament-title-with-slug.php`
 
 The values can be programmatically overridden with: `TitleWithSlugInput::make(fieldTitle: 'title')`
 
 ```php
 [
     'field_title' => 'title', // Overwrite with (fieldTitle: 'title')
-    'field_slug' => 'slug', // Overwrite with (fieldSlug: 'title')
+    'field_slug' => 'slug', // Overwrite with (fieldSlug: 'slug')
     'url_host' => env('APP_URL'), // Overwrite with (urlHost: 'https://www.camya.com/')
 ];
 
@@ -529,7 +539,7 @@ Below is an example with some defaults overridden.
         'modifyRuleUsing' => fn(Unique $rule) => $rule->where('is_published', 1),
         'ignorable' => fn(?Model $record) => $record,
     ],
-    titleIsReadonly: fn($context) => $context !== 'create',
+    titleIsReadonly: fn($operation) => $operation !== 'create',
     titleAutofocus: true,
     titleAfterStateUpdated: function ($state) {},
     titleFieldWrapper: function($input){ return $input; },
@@ -544,13 +554,13 @@ Below is an example with some defaults overridden.
         'modifyRuleUsing' => fn(Unique $rule) => $rule->where('is_published', 1),
         'ignorable' => fn(?Model $record) => $record,
     ],
-    slugIsReadonly: fn($context) => $context !== 'create',
+    slugIsReadonly: fn($operation) => $operation !== 'create',
     slugSlugifier: fn($string) => Str::slug($string),
     slugRuleRegex: '/^[a-z0-9\-\_]*$/',
     slugAfterStateUpdated: function ($state) {},
     slugLabelPostfix: null,
 
-)->columnSpan('full'),
+)->columnSpanFull(),
 ```
 
 ## Changelog
@@ -559,16 +569,16 @@ Please see the [release changelog](https://github.com/camya/filament-title-with-
 
 ## Contributing
 
-Want to implement a feature, fix a bug, or translate this package? Please see [contributing](.github/CONTRIBUTING.md)
-for details.
+Want to implement a feature, fix a bug, or translate this package? Please open an issue or pull request on GitHub:
+[mmoollllee/filament-title-with-slug](https://github.com/mmoollllee/filament-title-with-slug).
 
 ## Security Vulnerabilities
 
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
+If you discover a security vulnerability, please report it privately to the maintainers instead of opening a public issue.
 
 ## Credits
 
-This is a fork from ```camya/filament-title-with-slug```, updated to work with Filament v3.0.
+This is a fork from ```camya/filament-title-with-slug```, updated to work with Filament v5.
 
 - [Andreas Scheibel (camya)](https://github.com/camya) (Developer at  [camya.com](https://www.camya.com)
   / [epicbundle.com](https://www.epicbundle.com))
@@ -576,7 +586,7 @@ This is a fork from ```camya/filament-title-with-slug```, updated to work with F
 [FilamentPHP](https://filamentphp.com/plugins/title-with-slug-permalink)
 is based on
 [Laravel](https://laravel.com/),
-[Livewire](https://laravel-livewire.com/),
+[Livewire](https://livewire.laravel.com/),
 [AlpineJS](https://alpinejs.dev/),
 and
 [TailwindCSS](https://tailwindcss.com/). (aka Tall Stack)
