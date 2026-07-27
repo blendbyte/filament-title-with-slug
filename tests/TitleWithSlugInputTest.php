@@ -1,10 +1,11 @@
 <?php
 
-use Blendbyte\FilamentTitleWithSlug\TitleWithSlugInput;
+use Blendbyte\FilamentTitleWithSlug\SlugInput;
 use Blendbyte\FilamentTitleWithSlug\Tests\Support\Record;
 use Blendbyte\FilamentTitleWithSlug\Tests\Support\TestableForm;
-use Illuminate\Database\Eloquent\Model;
+use Blendbyte\FilamentTitleWithSlug\TitleWithSlugInput;
 use Filament\Schemas\Components\Utilities\Set;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 
@@ -17,6 +18,21 @@ describe('rendering', function () {
         TestableForm::$formSchema = [TitleWithSlugInput::make()];
 
         Livewire::test(TestableForm::class)->assertOk();
+    });
+
+    it('renders the permalink row instead of the embedded TextInput fallback', function () {
+        TestableForm::$formSchema = [TitleWithSlugInput::make()];
+
+        // Regression: SlugInput must declare the $view PROPERTY. TextInput implements
+        // HasEmbeddedView, so ViewComponent::toHtml() only reaches the Blade view when
+        // hasView() (i.e. isset($this->view)) is true. A getView() override alone makes
+        // Filament fall back to TextInput::toEmbeddedHtml() — silently, with no error —
+        // and the whole permalink row disappears behind a plain text input.
+        expect(SlugInput::make('slug')->hasView())->toBeTrue();
+
+        Livewire::test(TestableForm::class)
+            ->assertSeeHtml('fts-slug-row')
+            ->assertSeeHtml('fts-slug-edit-link');
     });
 
     it('binds to default field names (title / slug)', function () {
