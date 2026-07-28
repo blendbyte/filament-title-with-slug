@@ -8,15 +8,6 @@ use Illuminate\Support\Str;
 
 class SlugInput extends TextInput
 {
-    /**
-     * Must be the $view PROPERTY, not a getView() override.
-     *
-     * TextInput implements HasEmbeddedView, and ViewComponent::toHtml() only
-     * renders the Blade view when hasView() is true — which checks
-     * isset($this->view). With just a getView() override, hasView() stays false
-     * and Filament silently falls back to TextInput::toEmbeddedHtml(), dropping
-     * the whole permalink row in favour of a plain text input.
-     */
     protected string $view = 'filament-title-with-slug::forms.fields.slug-input';
 
     protected string|Closure|null $context = null;
