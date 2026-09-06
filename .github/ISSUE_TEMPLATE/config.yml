@@ -3,3 +3,6 @@ contact_links:
   - name: Question / Support
     url: https://github.com/blendbyte/filament-title-with-slug/discussions
     about: For usage questions and general support, please use GitHub Discussions.
+  - name: Security vulnerability
+    url: https://github.com/blendbyte/filament-title-with-slug/security/advisories/new
+    about: Please report security issues privately. Do not open a public issue.
