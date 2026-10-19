@@ -100,7 +100,7 @@ class TitleWithSlugInput
                 ->autocomplete(false)
                 ->rules($titleRules)
                 ->extraInputAttributes($titleExtraInputAttributes ?? ['style' => 'font-size: 1.25rem; font-weight: 600;'])
-                ->beforeStateDehydrated(fn (TextInput $component, $state) => $component->state(trim($state)))
+                ->beforeStateDehydrated(fn (TextInput $component, $state) => $component->state(trim($state ?? '')))
                 ->afterStateUpdated(
                     function (
                         $state,
@@ -190,7 +190,7 @@ class TitleWithSlugInput
                     $fieldSlug,
                     $slugAfterStateUpdated,
                 ) {
-                    $text = trim($state) === ''
+                    $text = trim($state ?? '') === ''
                         ? $get($fieldTitle)
                         : $get($fieldSlug);
 
